@@ -8,4 +8,9 @@
 //     "dev": "nodemon index.js"
 //   }
 //allows to run scripts
-//*npm run dev       Main way to run script dev
+//*npm run dev       Main way to run script dev]
+
+
+
+//npm install express
+//also installs bodyParser
