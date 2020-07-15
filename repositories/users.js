@@ -22,15 +22,33 @@ class UsersRepository {
         //  Open the file call this.filename
         //  Parse the contents
         //  Return the parsed data
-        return JSON.parse(await fs.promises.readFile(this.filename, { encoding: "utf8" }));
+        return JSON.parse(
+            await fs.promises.readFile(this.filename, {      encoding: "utf8" 
+            })
+        );
     };
+
+    //create and add new user
+    async create(attributes) {
+        // {email: "asfsdf.com", password: "sjadkfjls"}
+        const records = await this.getAll(); //get current list of users
+        records.push(attributes); //push new user
+
+        //  write the updated "records" array back to this.filename
+        await fs.promises.writeFile(this.filename, JSON.stringify(records));
+    }
 }
 
 //helper to test
 const test = async () => {
     //instance 
+    //  Get access to repo
     const repo = new UsersRepository("users.json"); //creates user.json
 
+    //  Save new record to repo
+    await repo.create({ email: "test@test.com", password: "password"})
+
+    //  Get all records saved
     const users = await repo.getAll();
 
     console.log(users);
