@@ -17,10 +17,31 @@ class UsersRepository {
             fs.writeFileSync(this.filename, "[]"); //creates users.json and add []
         }
     }
+
+    async getAll() {
+        //  Open the file call this.filename
+        const content = await fs.promises.readFile(this.filename, { encoding: "utf8" });
+
+
+        //  Parse the contents
+        const data = JSON.parse(content);
+
+        //  Return the parsed data
+        return data;
+    }
 }
 
-//instance 
-const repo = new UsersRepository("users.json"); //creates user.json
+//helper to test
+const test = async () => {
+    //instance 
+    const repo = new UsersRepository("users.json"); //creates user.json
+
+    const users = await repo.getAll();
+
+    console.log(users);
+};
+
+test(); 
 
 
 
