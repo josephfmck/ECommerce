@@ -30,12 +30,17 @@ class UsersRepository {
 
     //create and add new user
     async create(attributes) {
-        // {email: "asfsdf.com", password: "sjadkfjls"}
+        // attributes passed in = {email: "asfsdf.com", password: "sjadkfjls"}
         const records = await this.getAll(); //get current list of users
         records.push(attributes); //push new user
 
+        await this.writeAll(records);
+    }
+
+    //records that need to be saved
+    async writeAll(records) {
         //  write the updated "records" array back to this.filename
-        await fs.promises.writeFile(this.filename, JSON.stringify(records));
+        await fs.promises.writeFile(this.filename, JSON.stringify(records, null, 2)); //FORMATS users.json = null formatter, 2 level of indentation
     }
 }
 
@@ -43,10 +48,10 @@ class UsersRepository {
 const test = async () => {
     //instance 
     //  Get access to repo
-    const repo = new UsersRepository("users.json"); //creates user.json
+    const repo = new UsersRepository("users.json"); //user.json = filename passed in
 
     //  Save new record to repo
-    await repo.create({ email: "test@test.com", password: "password"})
+    await repo.create({ email: "test@test.com", password: "password"}); //create with attributes passed in
 
     //  Get all records saved
     const users = await repo.getAll();
