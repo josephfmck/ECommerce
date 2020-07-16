@@ -1,4 +1,5 @@
 const fs = require("fs");
+const crypto = require("crypto");
 
 class UsersRepository {
     //constructor executes whenever new UserRepository instance made
@@ -30,6 +31,9 @@ class UsersRepository {
 
     //create and add new user
     async create(attributes) {
+
+        attributes.id = this.randomId();
+
         // attributes passed in = {email: "asfsdf.com", password: "sjadkfjls"}
         const records = await this.getAll(); //get current list of users
         records.push(attributes); //push new user
@@ -41,6 +45,11 @@ class UsersRepository {
     async writeAll(records) {
         //  write the updated "records" array back to this.filename
         await fs.promises.writeFile(this.filename, JSON.stringify(records, null, 2)); //FORMATS users.json = null formatter, 2 level of indentation
+    }
+
+    //generate random Id for each record using node.js crypto module
+    randomId() {
+        return crypto.randomBytes(4).toString("hex");
     }
 }
 
