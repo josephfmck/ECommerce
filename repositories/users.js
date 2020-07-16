@@ -1,5 +1,6 @@
 const fs = require("fs");
 const crypto = require("crypto");
+const { create } = require("domain");
 
 class UsersRepository {
     //constructor executes whenever new UserRepository instance made
@@ -31,7 +32,7 @@ class UsersRepository {
 
     //create and add new user
     async create(attributes) {
-
+        //set id
         attributes.id = this.randomId();
 
         // attributes passed in = {email: "asfsdf.com", password: "sjadkfjls"}
@@ -65,6 +66,24 @@ class UsersRepository {
         console.log(filteredRecords); //records with record specified deleted
         await this.writeAll(filteredRecords); //write records without deleted record
     }
+
+    async update(id, attributes) {
+        const records = await this.getAll();
+        const record = records.find(record => record.id === id);
+
+        if(!record) {
+            throw new Error(`record with id ${id} not found`);
+        }
+        //Update
+        //takes key val pairs from attributes
+        //copys pairs onto record obj
+        //2.  record === {email: test@test.com} assign attrs to record
+        //1.  attrs === {password: "password"}  take atrrs
+        Object.assign(record, attributes);
+        //3. record === {email: "test@test.com", password: "password"}
+
+        await this.writeAll(records);
+    }
 }
 
 //helper to test
@@ -73,7 +92,7 @@ const test = async () => {
     //  Get access to repo
     const repo = new UsersRepository("users.json"); //user.json = filename passed in
 
-    await repo.delete("71d09f01");
+    await repo.update("694f64e4", {password: "mypassword"});
 };
 
 test(); 
