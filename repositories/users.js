@@ -51,6 +51,12 @@ class UsersRepository {
     randomId() {
         return crypto.randomBytes(4).toString("hex");
     }
+
+    //pass in id of record we want retrieved
+    async getOne(id) {
+        const records = await this.getAll(); //get all records
+        return records.find(record => record.id = id); //find record with id passed in = record.id
+    }
 }
 
 //helper to test
@@ -59,13 +65,9 @@ const test = async () => {
     //  Get access to repo
     const repo = new UsersRepository("users.json"); //user.json = filename passed in
 
-    //  Save new record to repo
-    await repo.create({ email: "test@test.com", password: "password"}); //create with attributes passed in
+    const user = await repo.getOne("71d09f01");
 
-    //  Get all records saved
-    const users = await repo.getAll();
-
-    console.log(users);
+    console.log(user);
 };
 
 test(); 
