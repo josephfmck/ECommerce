@@ -57,6 +57,14 @@ class UsersRepository {
         const records = await this.getAll(); //get all records
         return records.find(record => record.id = id); //find record with id passed in = record.id
     }
+
+    async delete(id) {
+        const records = await this.getAll();
+        const filteredRecords = records.filter(record => record.id !== id); //return true if record.id !== id
+
+        console.log(filteredRecords); //records with record specified deleted
+        await this.writeAll(filteredRecords); //write records without deleted record
+    }
 }
 
 //helper to test
@@ -65,9 +73,7 @@ const test = async () => {
     //  Get access to repo
     const repo = new UsersRepository("users.json"); //user.json = filename passed in
 
-    const user = await repo.getOne("71d09f01");
-
-    console.log(user);
+    await repo.delete("71d09f01");
 };
 
 test(); 
