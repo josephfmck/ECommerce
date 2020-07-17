@@ -84,6 +84,33 @@ class UsersRepository {
 
         await this.writeAll(records);
     }
+
+    //  GetOneBy filters and finds results to one record
+    async getOneBy(filters) {
+        const records = await this.getAll();
+
+        //for of iterating through Array of records
+        for(let record of records) {
+            let found = true;
+
+            //iterate over filters obj
+            //look at every key val pair
+            //for every key compare the value to the value of the appropriate key in the record obj
+            //if not the same then update found to false
+            //if found still = true then we have found the record were looking for
+
+            //for in iterate through obj for every key val pair in obj
+            for(let key in filters) {
+                if(record[key] !== filters[key]) {
+                    found = false; //did not find record
+                }
+            }
+            //if found still true
+            if(found) {
+                return record;
+            }
+        }
+    }
 }
 
 //helper to test
@@ -92,7 +119,9 @@ const test = async () => {
     //  Get access to repo
     const repo = new UsersRepository("users.json"); //user.json = filename passed in
 
-    await repo.update("694f64e4", {password: "mypassword"});
+    const user = await repo.getOneBy({email: "test@test.com"});
+
+    console.log(user);
 };
 
 test(); 
