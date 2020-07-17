@@ -1,6 +1,5 @@
 const fs = require("fs");
 const crypto = require("crypto");
-const { create } = require("domain");
 
 class UsersRepository {
     //constructor executes whenever new UserRepository instance made
@@ -113,20 +112,33 @@ class UsersRepository {
     }
 }
 
-//helper to test
-const test = async () => {
-    //instance 
-    //  Get access to repo
-    const repo = new UsersRepository("users.json"); //user.json = filename passed in
 
-    const user = await repo.getOneBy({email: "test@test.com"});
+//Export an INSTANCE of the class
+module.exports = new UsersRepository("users.json");
 
-    console.log(user);
-};
+//this RIGHT way
+//ANOTHER FILE... easier way
+//const repo = require("./users");
+//repo.getAll();
+//repo.getOne();
 
-test(); 
+//YET ANOTHER FILE...
+//const repo = require("./users");
+//repo.getAll();
+//LETS US HAVE JUST ONE COPY OF UsersRepo
 
 
 
-//to run in terminal in repositories directory
-//node users.js
+
+
+//NOT GOOD WAY
+//module.exports = UsersRepository;
+
+//ANOTHER FILE.... have to do
+//const UsersRepository = require("./users");
+//const repo = new UsersRepository("users.json");
+
+//WHY?
+//YET ANOTHER FILE... ends up creating more than one json if you misspell users.json
+//const UsersRepository = require("./users");
+//const repo = new UsersRepository("uses.json");
