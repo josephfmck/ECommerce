@@ -15,7 +15,7 @@ app.use(cookieSession({
 })); //pass in with configur obj, keys prop encrypts
 
 
-app.get("/", (request, response) => {
+app.get("/signup", (request, response) => {
     response.send(`
         <div>
             Your id is: ${request.session.userId}
@@ -30,7 +30,7 @@ app.get("/", (request, response) => {
 });
 
 
-app.post("/", async (request, response) => {
+app.post("/signup", async (request, response) => {
     //console.log(request); //method: POST
     console.log(request.body);
 
@@ -60,8 +60,29 @@ app.post("/", async (request, response) => {
     response.send("Account Created");
 });
 
+//sign out by removing info in their cookie
+app.get('/signout', (request, response) => {
+    request.session = null; //clears out current cookie session
 
+    response.send("you are logged out");
 
+});
+
+app.get("/signin", (req, res) => {
+    res.send(`
+    <div>
+        <form method="POST">
+            <input name="email" placeholder="email"/>
+            <input name="password" placeholder="password"/>
+            <button>Sign In</button>
+        </form>
+    </div>
+    `);
+});
+
+app.post("/signin", async (req,res) => {
+
+});
 
 app.listen(3000, () => {
     console.log("listening on port 3000");
