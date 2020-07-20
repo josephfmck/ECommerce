@@ -40,6 +40,13 @@ app.post("/", async (request, response) => {
     if(password !== passwordConfirmation) {
         return response.send("Passwords must match");
     }
+
+    //  Producation Grade Authentication with Cookies
+    //  Create a user in our user repo to represent this person
+    await usersRepo.create({ email: email, password: password});
+    
+    //  Store the id of that user inside the users cookie
+
     response.send("Account Created");
 });
 

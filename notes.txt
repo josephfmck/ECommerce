@@ -14,3 +14,8 @@
 
 //npm install express
 //also installs bodyParser
+
+
+
+//npm install cookie-session
+//library to handle cookies and authentication

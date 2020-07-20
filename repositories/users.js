@@ -39,6 +39,8 @@ class UsersRepository {
         records.push(attributes); //push new user
 
         await this.writeAll(records);
+
+        return attributes; //   Get back users obj with ID for Authentication
     }
 
     //records that need to be saved
