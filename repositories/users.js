@@ -77,10 +77,10 @@ class UsersRepository {
         const [hashed, salt] = saved.split("."); //Same logic
 
         //hash the supplied passWd
-        const hashedSupplied = await scrypt(supplied, salt, 64); //pass in pw, salt
+        const hashedSuppliedBuffer = await scrypt(supplied, salt, 64); //pass in pw, salt
 
         //compare returns T/F
-        return hashed === hashedSupplied;
+        return hashed === hashedSuppliedBuffer.toString("hex");
     }
 
     //records that need to be saved

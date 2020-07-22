@@ -90,9 +90,16 @@ app.post("/signin", async (req,res) => {
     if(!user) {
         return res.send("email not found");
     }
+
+    //T/F of comparision passwords
+    const validPassword = await usersRepo.comparePasswords(
+        user.password,
+        password
+    );
+
     //if users pass !== password provided
-    if(user.password !== password) {
-        res.send("invalid password");
+    if(!validPassword) {
+        return res.send("invalid password");
     }
     //set to id of user from database
     //successfully signed in
