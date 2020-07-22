@@ -1,5 +1,8 @@
 const fs = require("fs");
 const crypto = require("crypto");
+const util = require("util"); //nodeJS utilities, promisify
+
+const scrypt = util.promisify(crypto.scrypt); //scrypt becomes version of the function we created and NOW RETURNS A PROMISE
 
 class UsersRepository {
     //constructor executes whenever new UserRepository instance made
@@ -31,16 +34,34 @@ class UsersRepository {
 
     //create and add new user
     async create(attributes) {
+        //ASSUME: attrs === { email: "", password: ""}
+
         //set id
         attributes.id = this.randomId();
 
+
+        //https://nodejs.org/api/crypto.html#crypto_crypto_scrypt_password_salt_keylen_options_callback
+        //8 = # of bytes
+        const salt = crypto.randomBytes(8).toString("hex"); //random #'s and letter's
+        
+        const buffer = await scrypt(attributes.password, salt, 64); //scrypt promisify'd to replace callback with a promise
+
+
         // attributes passed in = {email: "asfsdf.com", password: "sjadkfjls"}
         const records = await this.getAll(); //get current list of users
-        records.push(attributes); //push new user
+
+
+        const record = {
+            ...attributes,
+            password: `${buffer.toString("hex")}.${salt}`
+        }
+
+        //pass in all attrs, replace password with hashed+salt password
+        records.push(record); //push new user
 
         await this.writeAll(records);
 
-        return attributes; //   Get back users obj with ID for Authentication
+        return record; //   Get back record obj with ID, and hashed password for Authentication
     }
 
     //records that need to be saved
