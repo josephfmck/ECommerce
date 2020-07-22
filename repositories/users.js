@@ -44,6 +44,7 @@ class UsersRepository {
         //8 = # of bytes
         const salt = crypto.randomBytes(8).toString("hex"); //random #'s and letter's
         
+        //scrypt hashes
         const buffer = await scrypt(attributes.password, salt, 64); //scrypt promisify'd to replace callback with a promise
 
 
@@ -62,6 +63,24 @@ class UsersRepository {
         await this.writeAll(records);
 
         return record; //   Get back record obj with ID, and hashed password for Authentication
+    }
+
+    //saved DB passWd, supplied passWd user inputed 
+    async comparePasswords(saved, supplied) {
+        //  Saved -> password saved in our database. "hashed.salt"
+        //  Supplied -> password given to us by a user trying sign in
+
+        // const result = saved.split("."); //split the hash and salt, turns into arr
+        // const hashed = result[0]; 
+        // const salt = result[1];
+        //^^^^^^^^^^^^^^^^SAME
+        const [hashed, salt] = saved.split("."); //Same logic
+
+        //hash the supplied passWd
+        const hashedSupplied = await scrypt(supplied, salt, 64); //pass in pw, salt
+
+        //compare returns T/F
+        return hashed === hashedSupplied;
     }
 
     //records that need to be saved
