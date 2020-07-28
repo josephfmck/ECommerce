@@ -1,4 +1,8 @@
 const express = require("express");
+//https://express-validator.github.io/docs/
+//only grabbing check function from validator
+const { check } = require("express-validator");
+
 const usersRepo = require("../../repositories/users.js");
 const signupTemplate = require("../../views/admin/auth/signup.js");
 const signinTemplate = require("../../views/admin/auth/signin.js");
@@ -11,7 +15,13 @@ router.get("/signup", (request, response) => {
 });
 
 
-router.post("/signup", async (request, response) => {
+//2nd arg arr for express-validator
+//check("propToValidate") auto knows to check str as prop
+router.post("/signup", [
+    check("email"),
+    check("password"),
+    check("passwordConfirmation"),
+], async (request, response) => {
     //console.log(request); //method: POST
     console.log(request.body);
 
