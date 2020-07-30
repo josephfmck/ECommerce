@@ -6,6 +6,8 @@ const { check, validationResult } = require("express-validator");
 const usersRepo = require("../../repositories/users.js");
 const signupTemplate = require("../../views/admin/auth/signup.js");
 const signinTemplate = require("../../views/admin/auth/signin.js");
+//destructure prop from validators.js
+const { requireEmail, requirePassword, requirePasswordConfirmation } = require("./validators");
 
 //subrouter: is exactly like app (replaced), keeps track of route handlers
 const router = express.Router();
@@ -16,37 +18,11 @@ router.get("/signup", (request, response) => {
 
 
 //2nd arg arr for express-validator
-//check("propToValidate") auto knows to check str as prop
-//sanitization: to trim/normalizeEmail() or do something to prop before check/validating it isEmail()
 router.post("/signup", 
 [
-    check("email")
-        .trim()
-        .normalizeEmail()
-        .isEmail()
-        .withMessage("Must be valid email")
-        .custom( async (emailValue) => {
-            //SIGN UP VALIDATION
-            //if someone has signed up with given email 
-            const existingUser = await usersRepo.getOneBy({ email: emailValue}); //where email: checked email provided
-            if(existingUser) {
-                throw new Error("Email already in use");
-            }
-        }),
-    check("password")
-        .trim()
-        .isLength({ min: 4, max: 20 })
-        .withMessage("Must be between 4 and 20 characters"),
-    check("passwordConfirmation")
-        .trim()
-        .isLength({ min: 4, max: 20 })
-        .withMessage("Must be between 4 and 20 characters")
-        .custom((pwConfirmationValue, { req }) => {
-            //Password Signup Validation 
-            if(pwConfirmationValue !== req.body.password) {
-            throw new Error("Passwords must match");
-            }
-        }),
+    requireEmail,
+    requirePassword,
+    requirePasswordConfirmation
 ], 
 async (request, response) => {
     //console.log(request); //method: POST
@@ -58,8 +34,6 @@ async (request, response) => {
 
     //destructure
     const { email, password, passwordConfirmation } = request.body;
-
-
 
     //  Production Grade Authentication with Cookies
     //  Create a user in our user repo to represent this person
