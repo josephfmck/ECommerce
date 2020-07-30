@@ -23,13 +23,16 @@ router.post("/signup",
     check("email")
         .trim()
         .normalizeEmail()
-        .isEmail(),
+        .isEmail()
+        .withMessage("Must be valid email"),
     check("password")
         .trim()
-        .isLength({ min: 4, max: 20 }),
+        .isLength({ min: 4, max: 20 })
+        .withMessage("Must be between 4 and 20 characters"),
     check("passwordConfirmation")
         .trim()
-        .isLength({ min: 4, max: 20 }),
+        .isLength({ min: 4, max: 20 })
+        .isMessage("Must be between 4 and 20 characters"),
 ], 
 async (request, response) => {
     //console.log(request); //method: POST
