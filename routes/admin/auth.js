@@ -24,7 +24,15 @@ router.post("/signup",
         .trim()
         .normalizeEmail()
         .isEmail()
-        .withMessage("Must be valid email"),
+        .withMessage("Must be valid email")
+        .custom( async (emailValue) => {
+            //SIGN UP VALIDATION
+            //if someone has signed up with given email 
+            const existingUser = await usersRepo.getOneBy({ email: emailValue}); //where email: checked email provided
+            if(existingUser) {
+                throw new Error("Email already in use");
+            }
+        }),
     check("password")
         .trim()
         .isLength({ min: 4, max: 20 })
@@ -32,30 +40,26 @@ router.post("/signup",
     check("passwordConfirmation")
         .trim()
         .isLength({ min: 4, max: 20 })
-        .isMessage("Must be between 4 and 20 characters"),
+        .withMessage("Must be between 4 and 20 characters")
+        .custom((pwConfirmationValue, { req }) => {
+            //Password Signup Validation 
+            if(pwConfirmationValue !== req.body.password) {
+            throw new Error("Passwords must match");
+            }
+        }),
 ], 
 async (request, response) => {
     //console.log(request); //method: POST
     console.log(request.body);
 
-    //express-validator library attaches results of the check validation to the request handler
+    //Middle-Ware express-validator library attaches results of the check validation to the request handler
     const errors = validationResult(request); //gain access to those results from checks
     console.log(errors);
 
     //destructure
     const { email, password, passwordConfirmation } = request.body;
 
-    //SIGN UP VALIDATION
-    //if someone has signed up with given email 
-    const existingUser = await usersRepo.getOneBy({ email: email}); //where email: destructured email provided
-    if(existingUser) {
-        return response.send("Email already in use");
-    }
 
-    //Password Signup Validation 
-    if(password !== passwordConfirmation) {
-        return response.send("Passwords must match");
-    }
 
     //  Production Grade Authentication with Cookies
     //  Create a user in our user repo to represent this person
