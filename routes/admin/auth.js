@@ -1,7 +1,7 @@
 const express = require("express");
 //https://express-validator.github.io/docs/
-//only grabbing check function from validator
-const { check } = require("express-validator");
+//only grabbing check and validationResult functions from validator
+const { check, validationResult } = require("express-validator");
 
 const usersRepo = require("../../repositories/users.js");
 const signupTemplate = require("../../views/admin/auth/signup.js");
@@ -17,13 +17,27 @@ router.get("/signup", (request, response) => {
 
 //2nd arg arr for express-validator
 //check("propToValidate") auto knows to check str as prop
-router.post("/signup", [
-    check("email"),
-    check("password"),
-    check("passwordConfirmation"),
-], async (request, response) => {
+//sanitization: to trim/normalizeEmail() or do something to prop before check/validating it isEmail()
+router.post("/signup", 
+[
+    check("email")
+        .trim()
+        .normalizeEmail()
+        .isEmail(),
+    check("password")
+        .trim()
+        .isLength({ min: 4, max: 20 }),
+    check("passwordConfirmation")
+        .trim()
+        .isLength({ min: 4, max: 20 }),
+], 
+async (request, response) => {
     //console.log(request); //method: POST
     console.log(request.body);
+
+    //express-validator library attaches results of the check validation to the request handler
+    const errors = validationResult(request); //gain access to those results from checks
+    console.log(errors);
 
     //destructure
     const { email, password, passwordConfirmation } = request.body;
