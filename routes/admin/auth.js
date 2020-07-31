@@ -7,7 +7,13 @@ const usersRepo = require("../../repositories/users.js");
 const signupTemplate = require("../../views/admin/auth/signup.js");
 const signinTemplate = require("../../views/admin/auth/signin.js");
 //destructure prop from validators.js
-const { requireEmail, requirePassword, requirePasswordConfirmation } = require("./validators");
+const { 
+    requireEmail, 
+    requirePassword, 
+    requirePasswordConfirmation, 
+    requireEmailExists,
+    requireValidPasswordForUser    
+} = require("./validators");
 
 //subrouter: is exactly like app (replaced), keeps track of route handlers
 const router = express.Router();
@@ -64,40 +70,11 @@ router.get("/signin", (req, res) => {
 });
 
 //validators passed in 2nd arr
+//exports come from validators.js
 router.post("/signin",
     [
-        check("email")
-            .trim()
-            .normalizeEmail()
-            .isEmail()
-            .withMessage("Must provide valid email")
-            .custom(async (email) => {
-                const user = await usersRepo.getOneBy({email: email});
-                if(!user) {
-                    throw new Error("Email not found");
-                }
-            }),
-        check("password")
-            .trim()
-            .custom(async (password, { req })=> {
-                //get user checking for
-                const user = await usersRepo.getOneBy({ email: req.body.email });
-
-                //if user undefined
-                if(!user) {
-                    throw new Error("Invalid password");
-                }
-
-                //T/F of comparision passwords
-                const validPassword = await usersRepo.comparePasswords(
-                    user.password,
-                    password
-                );
-                //if users pass !== password provided
-                if(!validPassword) {
-                    throw new Error("invalid Password");
-                }
-            })
+        requireEmailExists,
+        requireValidPasswordForUser
     ], 
     async (req,res) => {
         const errors = validationResult(req); //gain access to those results from checks
