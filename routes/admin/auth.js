@@ -79,31 +79,36 @@ router.post("/signin",
             }),
         check("password")
             .trim()
+            .custom(async (password, { req })=> {
+                //get user checking for
+                const user = await usersRepo.getOneBy({ email: req.body.email });
+
+                //if user undefined
+                if(!user) {
+                    throw new Error("Invalid password");
+                }
+
+                //T/F of comparision passwords
+                const validPassword = await usersRepo.comparePasswords(
+                    user.password,
+                    password
+                );
+                //if users pass !== password provided
+                if(!validPassword) {
+                    throw new Error("invalid Password");
+                }
+            })
     ], 
     async (req,res) => {
         const errors = validationResult(req); //gain access to those results from checks
         console.log(errors);
 
-        const { email, password } = req.body;
+        const { email } = req.body;
 
         //find one with email provided
         const user = await usersRepo.getOneBy({ email: email});
 
-        //if no user
-        if(!user) {
-            return res.send("email not found");
-        }
 
-        //T/F of comparision passwords
-        const validPassword = await usersRepo.comparePasswords(
-            user.password,
-            password
-        );
-
-        //if users pass !== password provided
-        if(!validPassword) {
-            return res.send("invalid password");
-        }
         //set to id of user from database
         //successfully signed in
         req.session.userId = user.id;
