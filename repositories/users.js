@@ -52,12 +52,13 @@ class UsersRepository {
         const records = await this.getAll(); //get current list of users
 
 
+        //replace password with hashed+salt password
         const record = {
             ...attributes,
             password: `${buffer.toString("hex")}.${salt}`
         }
 
-        //pass in all attrs, replace password with hashed+salt password
+        //pass in all attrs
         records.push(record); //push new user
 
         await this.writeAll(records);

@@ -13,7 +13,7 @@ const { requireEmail, requirePassword, requirePasswordConfirmation } = require("
 const router = express.Router();
 
 router.get("/signup", (request, response) => {
-    response.send(signupTemplate({ req: request}));
+    response.send(signupTemplate({ req: request})); //prop req = request from signup.js
 });
 
 
@@ -31,6 +31,11 @@ async (request, response) => {
     //Middle-Ware express-validator library attaches results of the check validation to the request handler
     const errors = validationResult(request); //gain access to those results from checks
     console.log(errors);
+
+    //isEmpty true if no errors
+    if(!errors.isEmpty()) {
+        return response.send(signupTemplate({ req: request, errors: errors })); //prop req and errors = request from signup.js
+    }
 
     //destructure
     const { email, password, passwordConfirmation } = request.body;

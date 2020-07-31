@@ -3,9 +3,6 @@ const { check } = require("express-validator");
 const usersRepo = require("../../repositories/users");
 
 
-
-
-
 //check("propToValidate") auto knows to check str as prop
 //sanitization: to trim/normalizeEmail() or do something to prop before check/validating it isEmail()
 
