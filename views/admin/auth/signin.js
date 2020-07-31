@@ -1,13 +1,7 @@
 const layout = require("../layout");
 
-//same as signup getError logic
-const getError = (errors, prop) => {
-    try {
-        return errors.mapped()[prop].msg;
-    } catch(err) {
-        return "";
-    }
-}
+const { getError } = require("../../helpers");
+
 
 module.exports = ({ errors }) => {
     //return html as content to layout

@@ -1,31 +1,7 @@
 const layout = require("../layout");
 
+const { getError } = require("../../helpers");
 
-const getError = (errors, prop) => {
-    //  prop === "email" || "password" || "passwordConfirmation"
-    //errors = arr of objs
-    //mapped convert arr as obj with keys email, password, passwordConfirmation
-    //keys of obj = [prop] = email, password, pwConfirm
-    // .msg get str
-
-    //errors.mapped() === {
-    //     email: {
-    //         msg: "Invalid Email"
-    //     },
-    //     password: {
-    //         msg: "password too short"
-    //     },
-    //     passwordConfirmation: {
-    //         msg: "passwords must match"
-    //     }
-    // }
-    try {
-        return errors.mapped()[prop].msg;
-    } catch (err) {
-        //means looked up error msg that doesnt exist
-        return "";
-    }
-};
 
 //assume pass in obj with a req prop for template
 module.exports = ({ req, errors }) => {
