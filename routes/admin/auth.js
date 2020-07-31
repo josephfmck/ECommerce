@@ -66,7 +66,7 @@ router.get('/signout', (request, response) => {
 });
 
 router.get("/signin", (req, res) => {
-    res.send(signinTemplate());
+    res.send(signinTemplate({})); //pass in empty obj so we can destructure errors in signin.js
 });
 
 //validators passed in 2nd arr
@@ -78,7 +78,11 @@ router.post("/signin",
     ], 
     async (req,res) => {
         const errors = validationResult(req); //gain access to those results from checks
-        console.log(errors);
+        //console.log(errors); 
+
+        if (!errors.isEmpty()) {
+            return res.send(signinTemplate({ errors: errors })); 
+        }
 
         const { email } = req.body;
 
