@@ -5,6 +5,9 @@ const authRouter = require("./routes/admin/auth.js");
 
 const app = express();
 
+//to access public folder
+app.use(express.static("public"));
+
 //BodyParser = Middleware library = does some pre-processing on the "req" and "res" objects
 //Globally apply middleware to all routes, parses for all requests
 app.use(bodyParser.urlencoded({ extended: true}));

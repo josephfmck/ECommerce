@@ -19,3 +19,11 @@
 
 //npm install cookie-session
 //library to handle cookies and authentication
+
+
+
+
+//Public directory
+any file in dir browser can gain access to
+//includes: CSS files, Imgs, fonts, javascript available to execute by browser
+//doesnt include: secret or important files like server code
