@@ -1,5 +1,6 @@
 const express = require("express");
 const productsRepo = require("../../repositories/products");
+const productsNewTemplate = require("../../views/admin/products/new");
 
 const router = express.Router();
 
@@ -11,7 +12,7 @@ router.get("/admin/products", (req, res) => {
 
 //2route to show a form allows user to create new product
 router.get("/admin/products/new", (req, res) => {
-
+    res.send(productsNewTemplate({}));
 });
 
 
