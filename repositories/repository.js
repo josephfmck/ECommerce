@@ -28,12 +28,15 @@ module.exports = class Repository {
     async create(attributes) {
         attributes.id = this.randomId();
 
-        const records = await this.getAll(); //get current list of users
+        const records = await this.getAll(); //get current list of users/products
+
+        //add in new record
         records.push(attributes);
 
+        //save records
         await this.writeAll(records);
 
-        return attributes;
+        return attributes; //attrs updated with id
     }
 
     async getAll() {
