@@ -11,6 +11,11 @@ router.get("/admin/products", (req, res) => {
 
 });
 
+//2route to show a form allows user to create new product
+router.get("/admin/products/new", (req, res) => {
+    res.send(productsNewTemplate({}));
+});
+
 //3allow this user to submit form
 router.post("/admin/products/new", 
 [
@@ -22,12 +27,16 @@ router.post("/admin/products/new",
     const errors = validationResult(req);
 
     console.log(errors);
-    res.send("submitted");
-});
+    console.log(req.body); //info inputed
 
-//2route to show a form allows user to create new product
-router.get("/admin/products/new", (req, res) => {
-    res.send(productsNewTemplate({}));
+    //custom bodyparser middleware
+    //multipart/form-data forces us to create custom
+    //every chunk of data console.log
+    req.on("data", data => {
+        console.log(data.toString());
+    });
+
+    res.send("submitted");
 });
 
 
