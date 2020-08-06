@@ -1,10 +1,15 @@
 const express = require("express");
 const { validationResult } = require("express-validator");
+const multer = require("multer"); //multer = a bodyparser that takes multipart for file inputs
+
 const productsRepo = require("../../repositories/products");
 const productsNewTemplate = require("../../views/admin/products/new");
 const { requireTitle, requirePrice } = require("./validators");
 
 const router = express.Router();
+
+//upload middleware function
+const upload = multer({ storage: multer.memoryStorage() });
 
 //1route to list out diff products
 router.get("/admin/products", (req, res) => {
@@ -22,6 +27,7 @@ router.post("/admin/products/new",
     requireTitle,
     requirePrice
 ], 
+upload.single("image"),
 (req, res) => {
     //gain access to errors results from checks
     const errors = validationResult(req);
@@ -29,12 +35,9 @@ router.post("/admin/products/new",
     console.log(errors);
     console.log(req.body); //info inputed
 
-    //custom bodyparser middleware
-    //multipart/form-data forces us to create custom
-    //every chunk of data console.log
-    req.on("data", data => {
-        console.log(data.toString());
-    });
+    //multer bodyparser middleware
+    //multipart/form-data breaks input into chunks, "title", "image"
+    console.log(req.file);
 
     res.send("submitted");
 });
