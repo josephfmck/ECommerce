@@ -69,7 +69,7 @@ module.exports = class Repository {
 
     async delete(id) {
         const records = await this.getAll();
-        const filteredRecords = records.filter(record => record.id !== id); //return true if record.id !== id
+        const filteredRecords = records.filter(record => record.id !== id); //for every record, return true if record.id !== id, returns all records that arent the deleted one
 
         console.log(filteredRecords); //records with record specified deleted
         await this.writeAll(filteredRecords); //write records without deleted record

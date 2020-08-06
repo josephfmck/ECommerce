@@ -7,6 +7,13 @@ const usersRepo = require("../../repositories/users");
 //sanitization: to trim/normalizeEmail() or do something to prop before check/validating it isEmail()
 
 module.exports = {
+    requireTitle: check("title")
+        .trim()
+        .isLength({ min: 5, max: 40}),
+    requirePrice: check("price")
+        .trim()
+        .toFloat()
+        .isFloat({ min: 1}),
     requireEmail: check("email")
         .trim()
         .normalizeEmail()
