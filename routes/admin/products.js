@@ -28,7 +28,7 @@ router.post("/admin/products/new",
     requirePrice
 ], 
 upload.single("image"),
-(req, res) => {
+async (req, res) => {
     //gain access to errors results from checks
     const errors = validationResult(req);
 
@@ -37,7 +37,14 @@ upload.single("image"),
 
     //multer bodyparser middleware
     //multipart/form-data breaks input into chunks, "title", "image"
-    console.log(req.file);
+    console.log(req.file); 
+    console.log(req.file.buffer); //raw img data
+    
+    const image = req.file.buffer.toString("base64"); //img in string format
+    const { title, price } = req.body;
+
+    await productsRepo.create({ title, price, image});
+
 
     res.send("submitted");
 });
