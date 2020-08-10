@@ -34,6 +34,7 @@ async (req, res) => {
     //gain access to errors results from checks
     const errors = validationResult(req);
 
+    //form validation
     if(!errors.isEmpty()) {
         return res.send(productsNewTemplate({ errors: errors }));
     }
