@@ -1,7 +1,8 @@
 const express = require("express");
-const { validationResult } = require("express-validator");
 const multer = require("multer"); //multer = a bodyparser that takes multipart for file inputs
 
+//handleErrors uses validatioResult
+const { handleErrors } = require("./middlewares");
 const productsRepo = require("../../repositories/products");
 const productsNewTemplate = require("../../views/admin/products/new");
 const { requireTitle, requirePrice } = require("./validators");
@@ -30,14 +31,8 @@ upload.single("image"),
     requireTitle,
     requirePrice
 ], 
+handleErrors(productsNewTemplate),
 async (req, res) => {
-    //gain access to errors results from checks
-    const errors = validationResult(req);
-
-    //form validation
-    if(!errors.isEmpty()) {
-        return res.send(productsNewTemplate({ errors: errors }));
-    }
 
     //multer bodyparser middleware
     //multipart/form-data breaks input into chunks, "title", "image"

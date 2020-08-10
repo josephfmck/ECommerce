@@ -1,7 +1,7 @@
 const express = require("express");
 //https://express-validator.github.io/docs/
 //only grabbing check and validationResult functions from validator
-const { check, validationResult } = require("express-validator");
+const { handleErrors } = require("./middlewares");
 
 const usersRepo = require("../../repositories/users.js");
 const signupTemplate = require("../../views/admin/auth/signup.js");
@@ -29,22 +29,11 @@ router.post("/signup",
     requireEmail,
     requirePassword,
     requirePasswordConfirmation
-], 
+],
+handleErrors(signupTemplate), 
 async (request, response) => {
-    //console.log(request); //method: POST
-    console.log(request.body);
-
-    //Middle-Ware express-validator library attaches results of the check validation to the request handler
-    const errors = validationResult(request); //gain access to those results from checks
-    console.log(errors);
-
-    //isEmpty true if no errors
-    if(!errors.isEmpty()) {
-        return response.send(signupTemplate({ req: request, errors: errors })); //prop req and errors = request from signup.js
-    }
-
     //destructure
-    const { email, password, passwordConfirmation } = request.body;
+    const { email, password } = request.body;
 
     //  Production Grade Authentication with Cookies
     //  Create a user in our user repo to represent this person
@@ -75,20 +64,13 @@ router.post("/signin",
     [
         requireEmailExists,
         requireValidPasswordForUser
-    ], 
+    ],
+    handleErrors(signinTemplate), 
     async (req,res) => {
-        const errors = validationResult(req); //gain access to those results from checks
-        //console.log(errors); 
-
-        if (!errors.isEmpty()) {
-            return res.send(signinTemplate({ errors: errors })); 
-        }
-
         const { email } = req.body;
 
         //find one with email provided
         const user = await usersRepo.getOneBy({ email: email});
-
 
         //set to id of user from database
         //successfully signed in
