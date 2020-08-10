@@ -22,29 +22,30 @@ router.get("/admin/products/new", (req, res) => {
 });
 
 //3allow this user to submit form
+//upload.single() from multer first parses
+//then check validators
 router.post("/admin/products/new", 
+upload.single("image"),
 [
     requireTitle,
     requirePrice
 ], 
-upload.single("image"),
 async (req, res) => {
     //gain access to errors results from checks
     const errors = validationResult(req);
 
-    console.log(errors);
-    console.log(req.body); //info inputed
+    if(!errors.isEmpty()) {
+        return res.send(productsNewTemplate({ errors: errors }));
+    }
 
     //multer bodyparser middleware
     //multipart/form-data breaks input into chunks, "title", "image"
-    console.log(req.file); 
     console.log(req.file.buffer); //raw img data
     
     const image = req.file.buffer.toString("base64"); //img in string format
     const { title, price } = req.body;
 
     await productsRepo.create({ title, price, image});
-
 
     res.send("submitted");
 });
