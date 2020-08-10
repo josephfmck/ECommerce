@@ -43,7 +43,7 @@ async (request, response) => {
     // req.session prop Added by cookie session
     request.session.userId = user.id; //obj with info inside maintains session
 
-    response.send("Account Created");
+    response.redirect("/admin/products");
 });
 
 //sign out by removing info in their cookie
@@ -76,7 +76,7 @@ router.post("/signin",
         //successfully signed in
         req.session.userId = user.id;
 
-        res.send("you are signed in");
+        res.redirect("/admin/products");
 });
 
 

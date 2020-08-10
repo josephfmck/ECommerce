@@ -41,6 +41,8 @@ module.exports = {
             //Password Signup Validation 
             if(pwConfirmationValue !== req.body.password) {
             throw new Error("Passwords must match");
+            } else {
+                return true;
             }
     }),
     requireEmailExists: check("email")

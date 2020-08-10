@@ -47,7 +47,7 @@ async (req, res) => {
 
     await productsRepo.create({ title, price, image});
 
-    res.send("submitted");
+    res.redirect("/admin/products");
 });
 
 
