@@ -5,6 +5,7 @@ const multer = require("multer"); //multer = a bodyparser that takes multipart f
 const { handleErrors } = require("./middlewares");
 const productsRepo = require("../../repositories/products");
 const productsNewTemplate = require("../../views/admin/products/new");
+const productsIndexTemplate = require("../../views/admin/products/index");
 const { requireTitle, requirePrice } = require("./validators");
 
 const router = express.Router();
@@ -13,7 +14,10 @@ const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 //1route to list out diff products
-router.get("/admin/products", (req, res) => {
+router.get("/admin/products", async (req, res) => {
+    const products = await productsRepo.getAll();
+
+    res.send(productsIndexTemplate({ products: products }));
 
 });
 

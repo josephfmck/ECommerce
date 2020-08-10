@@ -44,7 +44,7 @@ module.exports = class Repository {
         //  Parse the contents
         //  Return the parsed data
         return JSON.parse(
-            await fs.promises.readFile(this.filename, {      encoding: "utf8" 
+            await fs.promises.readFile(this.filename, { encoding: "utf8" 
             })
         );
     };
