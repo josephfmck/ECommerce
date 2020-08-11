@@ -5,6 +5,7 @@ const { validationResult } = require("express-validator");
 
 //middleware func handleErrors
 module.exports = {
+    //returning func, cuz want to customize handleErrors middleware with templates
     handleErrors(templateFunc) {
         return (req, res, next) => {
             const errors = validationResult(req);
@@ -16,5 +17,14 @@ module.exports = {
 
             next(); //call next middleware/invoke router handler
         };
+    },
+    //not returning a func, no customization required
+    requireAuth(req, res, next) {
+        //if no userId means not signed in 
+        if(!req.session.userId) {
+            return res.redirect("/signin");
+        }
+
+        next(); //run next middleware/routehandler
     }
 };

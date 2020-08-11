@@ -2,7 +2,7 @@ const express = require("express");
 const multer = require("multer"); //multer = a bodyparser that takes multipart for file inputs
 
 //handleErrors uses validatioResult
-const { handleErrors } = require("./middlewares");
+const { handleErrors, requireAuth } = require("./middlewares");
 const productsRepo = require("../../repositories/products");
 const productsNewTemplate = require("../../views/admin/products/new");
 const productsIndexTemplate = require("../../views/admin/products/index");
@@ -14,7 +14,8 @@ const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 //1route to list out diff products
-router.get("/admin/products", async (req, res) => {
+router.get("/admin/products", requireAuth, async (req, res) => {
+    
     const products = await productsRepo.getAll();
 
     res.send(productsIndexTemplate({ products: products }));
@@ -22,14 +23,15 @@ router.get("/admin/products", async (req, res) => {
 });
 
 //2route to show a form allows user to create new product
-router.get("/admin/products/new", (req, res) => {
+router.get("/admin/products/new", requireAuth, (req, res) => {
     res.send(productsNewTemplate({}));
 });
 
 //3allow this user to submit form
 //upload.single() from multer first parses
 //then check validators
-router.post("/admin/products/new", 
+router.post("/admin/products/new",
+requireAuth, 
 upload.single("image"),
 [
     requireTitle,
@@ -37,6 +39,7 @@ upload.single("image"),
 ], 
 handleErrors(productsNewTemplate),
 async (req, res) => {
+
 
     //multer bodyparser middleware
     //multipart/form-data breaks input into chunks, "title", "image"
