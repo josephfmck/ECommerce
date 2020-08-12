@@ -72,11 +72,30 @@ router.get("/admin/products/:id/edit", requireAuth, async (req, res) => {
 
 //5allow submitting/editing form
 router.post("/admin/products/:id/edit", 
-requireAuth, 
-upload.single("image"), //name prop of file type input from edit form
-async (req, res) => {
+    requireAuth, 
+    upload.single("image"), //name prop of file type input from edit form
+    [requireTitle, requirePrice],
+    handleErrors(productsEditTemplate),
+    async (req, res) => {
+        //updates/changes of title etc. from our form
+        const changes = req.body;
 
-});
+        //if a file was provided in request
+        if(req.file) {
+            changes.image = req.file.buffer.toString("base64"); //converts raw data from buffer
+        }
+
+        try {
+            await productsRepo.update(req.params.id, changes);
+        } catch (err) {
+            //if no record with that id
+            return res.send("could not find item");
+        }
+        
+        res.redirect("/admin/products");
+
+    }
+);
 
 //6allow deletion of products
 
