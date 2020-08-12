@@ -71,8 +71,11 @@ router.get("/admin/products/:id/edit", requireAuth, async (req, res) => {
 });
 
 //5allow submitting/editing form
-router.post("/admin/products/:id/edit", requireAuth, async (req, res) => {
-    
+router.post("/admin/products/:id/edit", 
+requireAuth, 
+upload.single("image"), //name prop of file type input from edit form
+async (req, res) => {
+
 });
 
 //6allow deletion of products
