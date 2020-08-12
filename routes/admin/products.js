@@ -57,7 +57,7 @@ async (req, res) => {
 
 //4allow editing diff products
 //:id is any characters
-router.get("/admin/products/:id/edit", async (req, res) => {
+router.get("/admin/products/:id/edit", requireAuth, async (req, res) => {
     console.log(req.params.id); //:id in url
 
     const product = await productsRepo.getOne(req.params.id);
@@ -71,6 +71,9 @@ router.get("/admin/products/:id/edit", async (req, res) => {
 });
 
 //5allow submitting/editing form
+router.post("/admin/products/:id/edit", requireAuth, async (req, res) => {
+    
+});
 
 //6allow deletion of products
 
