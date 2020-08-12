@@ -6,6 +6,7 @@ const { handleErrors, requireAuth } = require("./middlewares");
 const productsRepo = require("../../repositories/products");
 const productsNewTemplate = require("../../views/admin/products/new");
 const productsIndexTemplate = require("../../views/admin/products/index");
+const productsEditTemplate = require("../../views/admin/products/edit");
 const { requireTitle, requirePrice } = require("./validators");
 
 const router = express.Router();
@@ -55,6 +56,19 @@ async (req, res) => {
 
 
 //4allow editing diff products
+//:id is any characters
+router.get("/admin/products/:id/edit", async (req, res) => {
+    console.log(req.params.id); //:id in url
+
+    const product = await productsRepo.getOne(req.params.id);
+
+    //if didnt find product with id
+    if(!product) {
+        return res.send("Product not found");
+    }
+
+    res.send(productsEditTemplate({ product: product}));
+});
 
 //5allow submitting/editing form
 
