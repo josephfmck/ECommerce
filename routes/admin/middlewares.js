@@ -6,13 +6,19 @@ const { validationResult } = require("express-validator");
 //middleware func handleErrors
 module.exports = {
     //returning func, cuz want to customize handleErrors middleware with templates
-    handleErrors(templateFunc) {
-        return (req, res, next) => {
+    handleErrors(templateFunc, dataCallback) {
+        return async (req, res, next) => {
             const errors = validationResult(req);
 
             //if errors occur
             if(!errors.isEmpty()) {
-                return res.send(templateFunc({ errors: errors}));
+
+                let data = {};
+                if(dataCallback) {
+                    data = await dataCallback(req);
+                }
+
+                return res.send(templateFunc({ errors: errors, ...data} ));
             }
 
             next(); //call next middleware/invoke router handler

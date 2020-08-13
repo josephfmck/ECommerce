@@ -75,7 +75,13 @@ router.post("/admin/products/:id/edit",
     requireAuth, 
     upload.single("image"), //name prop of file type input from edit form
     [requireTitle, requirePrice],
-    handleErrors(productsEditTemplate),
+    //2nd optional arg func fixes handleErrors, return obj thats forwarded to template
+    handleErrors(productsEditTemplate, async (req) => {
+        //look up product
+        const product = await productsRepo.getOne(req.params.id);
+        //return product in obj
+        return { product: product };
+    }),
     async (req, res) => {
         //updates/changes of title etc. from our form
         const changes = req.body;
