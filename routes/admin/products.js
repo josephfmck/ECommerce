@@ -24,6 +24,7 @@ router.get("/admin/products", requireAuth, async (req, res) => {
 });
 
 //2route to show a form allows user to create new product
+//requireAuth makes sure user is authorized first
 router.get("/admin/products/new", requireAuth, (req, res) => {
     res.send(productsNewTemplate({}));
 });
@@ -104,6 +105,12 @@ router.post("/admin/products/:id/edit",
 );
 
 //6allow deletion of products
+router.post("/admin/products/:id/delete", requireAuth, async (req, res) => {
+    await productsRepo.delete(req.params.id);
+
+    res.redirect("/admin/products");
+});
+
 
 
 module.exports = router;
