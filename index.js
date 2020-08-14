@@ -2,7 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
 const authRouter = require("./routes/admin/auth.js");
-const productsRouter = require("./routes/admin/products");
+const adminProductsRouter = require("./routes/admin/products");
+const productsRouter = require("./routes/products");
 
 const app = express();
 
@@ -19,7 +20,9 @@ app.use(cookieSession({
 })); //pass in with configur obj, keys prop encrypts
 
 app.use(authRouter); //hooks up to auth.js routes
-app.use(productsRouter); //hooks up to products.js routes
+app.use(adminProductsRouter); //hooks up to products.js routes
+app.use(productsRouter); 
+
 
 app.listen(3000, () => {
     console.log("listening on port 3000");

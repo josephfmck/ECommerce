@@ -1,3 +1,6 @@
+//*All different route handlers related to admin dashboard
+
+
 const express = require("express");
 const multer = require("multer"); //multer = a bodyparser that takes multipart for file inputs
 
