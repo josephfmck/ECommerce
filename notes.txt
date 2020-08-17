@@ -30,3 +30,8 @@ any file in dir browser can gain access to
 
 
 //npm install multer
+
+
+//shopping cart
+//1 how do we tie cart to a person will will never login? How do we assign a person to a cart
+//2 even if we can identify who is trying to add an item to a cart, how do we tie a product to a cart? How do we assign a product to a cart
