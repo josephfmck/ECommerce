@@ -7,24 +7,36 @@ const router = express.Router();
 router.post("/cart/products", async (req, res) => {
     console.log(req.body.productId);
     
-    // Figure out the cart
+    // Cart
         //req.session = cookie session
     let cart;
     if (!req.session.cartId) {
-        // We dont have a cart, we need to create one
+        // Starting with no cart: Create one Cart
         // and store the cart id on the req.session.cartId cart prop
         cart = await cartsRepo.create({ items: [] });
 
         req.session.cartId = cart.id;
     } else {
-        // We have a cart! Lets get it from the repo
+        // We have a cart. Get it from the repo
         cart = await cartsRepo.getOne(req.session.cartId);
     }
 
-
-    // Either increment quantity for existing product
-    //OR add new product to item array
     console.log(cart);
+
+    //Create existing item with id
+    const existingItem = cart.items.find((item) => {
+        item.id = req.body.productId;
+    });
+
+    if(existingItem) {
+        // Increment quantity for existing product and save cart
+        existingItem.quantity++;
+    } else {
+        // Add new product id to items array
+        cart.items.push({ id: req.body.productId, quantity: 1 });
+    }
+
+
 
     res.send("Product added to cart");
 });
