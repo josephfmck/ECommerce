@@ -1,6 +1,6 @@
 const express = require("express");
 const cartsRepo = require("../repositories/carts.js");
-const productsRepo = require("../repositories/products");
+const productsRepo = require("../repositories/products.js");
 const cartShowTemplate = require("../views/carts/show");
 
 const router = express.Router();
@@ -63,6 +63,11 @@ router.get("/cart", async (req, res) => {
         //assign that product to each items product prop
         item.product = product;
     }
+    //CART NOW LOOKS LIKE 
+    //item [ {id: 123, quantity: , product: {id: 123, title: , price: } }]
+
+    console.log(cart);
+    //console.log(cart.product); IS UDEFINED BUT STILL CAN ACCESS IN show.js template
 
     res.send(cartShowTemplate({ items: cart.items}));
 });
