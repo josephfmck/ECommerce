@@ -1,5 +1,6 @@
 const express = require("express");
 const cartsRepo = require("../repositories/carts.js");
+const productsRepo = require("../repositories/products");
 
 const router = express.Router();
 
@@ -42,7 +43,26 @@ router.post("/cart/products", async (req, res) => {
     res.send("Product added to cart");
 });
 
-//  Receive a GET request to show all items in cart
+//  Receive a GET request to DISPLAY all items in cart
+router.get("/cart", async (req, res) => {
+    //if no cart created/no cartId
+    if(!req.session.cartId) {
+        return res.redirect("/");
+    }
+
+    const cart = await cartsRepo.getOne(req.session.cartId);
+
+    for(let item of cart.items) {
+        // item === { id: , quantity: }
+        //find product with items id
+        const product = await productsRepo.getOne(items.id);
+
+        //assign that product to each item
+        item.product = product;
+    }
+
+    res.send(cartShowTemplate({ items: cart.items}));
+});
 
 //  Receive a POST request to delete and item from a cart
 
