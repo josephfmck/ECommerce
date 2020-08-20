@@ -55,6 +55,18 @@ router.get('/cart', async (req, res) => {
 // Receive a post request to delete an item from a cart
 router.post("/cart/products/delete", async (req, res) => {
     console.log(req.body.itemId);
+
+    const { itemId } = req.body;
+    const cart = await cartsRepo.getOne(req.session.cartId);
+
+    //return t/f true = add item to new items arr, false = do not add it to new arr
+    const items = cart.items.filter(item => item.id !== itemId);
+    //SO item with itemId is not included in new arr
+
+    //replace this carts items arr with the items arr we created
+    await cartsRepo.update(req.session.cartId, { items: items});
+
+    res.redirect("/cart");
 });
 
 module.exports = router;
