@@ -1,6 +1,7 @@
 const express = require("express");
 const cartsRepo = require("../repositories/carts.js");
 const productsRepo = require("../repositories/products");
+const cartShowTemplate = require("../views/carts/show");
 
 const router = express.Router();
 
@@ -45,7 +46,7 @@ router.post("/cart/products", async (req, res) => {
 
 //  Receive a GET request to DISPLAY all items in cart
 router.get("/cart", async (req, res) => {
-    //if no cart created/no cartId
+    //if no cart created/no cartId assigned to user
     if(!req.session.cartId) {
         return res.redirect("/");
     }
@@ -53,11 +54,13 @@ router.get("/cart", async (req, res) => {
     const cart = await cartsRepo.getOne(req.session.cartId);
 
     for(let item of cart.items) {
-        // item === { id: , quantity: }
-        //find product with items id
-        const product = await productsRepo.getOne(items.id);
+        //CART LOOKS LIKE 
+            //item [ { id: , quantity: } ]
 
-        //assign that product to each item
+        //find corresponding product with items id
+        const product = await productsRepo.getOne(item.id);
+
+        //assign that product to each items product prop
         item.product = product;
     }
 
