@@ -1,10 +1,8 @@
-const layout = require("../layout");
+const layout = require('../layout');
 
-//all products we have
 module.exports = ({ products }) => {
-  //create individual html then join them
   const renderedProducts = products
-    .map((product) => {
+    .map(product => {
       return `
       <tr>
         <td>${product.title}</td>
@@ -17,14 +15,14 @@ module.exports = ({ products }) => {
           </a>
         </td>
         <td>
-            <form method="POST" action="/admin/products/${product.id}/delete">
-                <button class="button is-danger">Delete</button>
-            </form>
+          <form method="POST" action="/admin/products/${product.id}/delete">
+            <button class="button is-danger">Delete</button>
+          </form>
         </td>
       </tr>
     `;
     })
-    .join("");
+    .join('');
 
   return layout({
     content: `
@@ -45,6 +43,6 @@ module.exports = ({ products }) => {
           ${renderedProducts}
         </tbody>
       </table>
-    `,
+    `
   });
 };

@@ -1,10 +1,7 @@
-const layout = require("../layout");
-const { getError } = require("../../helpers");
+const layout = require('../layout');
+const { getError } = require('../../helpers');
 
-//function called with obj containing errors prop when we try to create product
 module.exports = ({ errors }) => {
-  //enctype changed to get full image info
-  //multipart sends each input as parts
   return layout({
     content: `
       <div class="columns is-centered">
@@ -15,13 +12,13 @@ module.exports = ({ errors }) => {
             <div class="field">
               <label class="label">Title</label>
               <input class="input" placeholder="Title" name="title">
-              <p class="help is-danger">${getError(errors, "title")}</p>
+              <p class="help is-danger">${getError(errors, 'title')}</p>
             </div>
             
             <div class="field">
               <label class="label">Price</label>
               <input class="input" placeholder="Price" name="price">
-              <p class="help is-danger">${getError(errors, "price")}</p>
+              <p class="help is-danger">${getError(errors, 'price')}</p>
             </div>
             
             <div class="field">
@@ -33,6 +30,6 @@ module.exports = ({ errors }) => {
           </form>
         </div>
       </div>
-    `,
+    `
   });
 };
