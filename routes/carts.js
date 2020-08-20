@@ -24,9 +24,8 @@ router.post("/cart/products", async (req, res) => {
     console.log(cart);
 
     //Create existing item with id
-    const existingItem = cart.items.find((item) => {
-        item.id = req.body.productId;
-    });
+    //Callback needs NO CURLY BRACES for quantity to increment
+    const existingItem = cart.items.find((item) => item.id === req.body.productId);
 
     if(existingItem) {
         // Increment quantity for existing product and save cart
